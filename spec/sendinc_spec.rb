@@ -56,6 +56,12 @@ describe Sendinc::Client do
       end
     end
   end
+
+  describe 'sending invalid message' do
+    it 'bizzombs' do
+      expect {client.mail}.to raise_error(Sendinc::MessageInvalidError)
+    end
+  end
 end
 
 describe Sendinc::Message  do
