@@ -18,6 +18,10 @@ module Sendinc
       JSON.parse response.body
     end
 
+    def post(endpoint, payload)
+      RestClient.post build_url(endpoint), payload
+    end
+
     private
 
     def build_url(path)
