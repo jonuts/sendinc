@@ -1,5 +1,7 @@
 # Sendinc
 
+[![Build Status](https://travis-ci.org/jonuts/sendinc.svg?branch=master)](https://travis-ci.org/jonuts/sendinc)
+
 Simple ruby wrapper for the Sendinc REST API
 
 ## Installation
@@ -34,7 +36,7 @@ You can send your message opts directly:
 
 or via block form:
 
-'client.mail {|msg| msg.subject = 'hello from sendinc!'}'
+`client.mail {|msg| msg.subject = 'hello from sendinc!'}`
 
 ## Development
 
