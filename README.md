@@ -1,8 +1,6 @@
 # Sendinc
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/sendinc`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Simple ruby wrapper for the Sendinc REST API
 
 ## Installation
 
@@ -22,7 +20,21 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Create your client object
+
+`client = Sendinc::Client.new 'my@email.com', 'supers3kritpassw0rd!!!'`
+
+See account info: `client.info`
+
+### Send your message
+
+You can send your message opts directly:
+
+`client.mail subject: 'hello from sendinc!', to: 'recipient@email.com', body: 'encrypted message goes here'`
+
+or via block form:
+
+'client.mail {|msg| msg.subject = 'hello from sendinc!'}'
 
 ## Development
 
@@ -32,7 +44,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/sendinc.
+Bug reports and pull requests are welcome on GitHub at https://github.com/jonuts/sendinc.
 
 
 ## License
