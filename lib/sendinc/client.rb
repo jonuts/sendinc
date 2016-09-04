@@ -13,6 +13,11 @@ module Sendinc
       @account = Account.new response["account"]
     end
 
+    def mail(opts={}, &blkopts)
+      message = Message.new(self, opts, &blkopts)
+      message.send!
+    end
+
     def get(endpoint)
       response = RestClient.get build_url(endpoint)
       JSON.parse response.body

@@ -36,6 +36,26 @@ describe Sendinc::Client do
       end
     end
   end
+
+  describe 'sending valid message' do
+    let(:mopts) do
+      {
+        to: 'foo@bar.com',
+        subject: 'hello thar',
+        body: 'wtf mate'
+      }
+    end
+
+    context 'good response' do
+      before do
+        stub_request(:post, "https://rest.sendinc.com/message.json").to_return(body: '')
+      end
+
+      it 'sends successfully' do
+        expect(client.mail(mopts)).to be
+      end
+    end
+  end
 end
 
 describe Sendinc::Message  do
