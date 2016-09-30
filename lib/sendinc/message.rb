@@ -25,8 +25,9 @@ module Sendinc
     attr_accessor :subject, :body, :to, :cc
     attr_reader :client, :attachments, :error_list
 
-    def attach(file)
-      attachments << file
+    # path<string>:: Must be path to an existing file on the filesystem
+    def attach(path)
+      attachments << path
     end
 
     def valid?
@@ -53,6 +54,9 @@ module Sendinc
         recipients: to
       }.tap {|opts|
         opts[:cc] = cc if cc
+        attachments.each.with_index {|path, idx|
+          opts[:"att_#{idx}}"] = File.new(path, 'rb')
+        }
       }
     end
   end
