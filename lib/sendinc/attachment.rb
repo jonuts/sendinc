@@ -10,8 +10,8 @@ module Sendinc
         @filename = opts[:filename]
         @path = opts[:path]
       end
-
     end
+
     attr_reader :file, :string, :filename, :filetype, :path
 
     def generate

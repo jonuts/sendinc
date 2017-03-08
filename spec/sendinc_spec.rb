@@ -227,7 +227,7 @@ describe Sendinc::Message  do
 
       context 'with file path attachment' do
         context 'file path exists' do
-          let(:extra_opts) { {attachments: [{path: filepath}]}}
+          let(:extra_opts) { {attachments: [filepath]}}
 
           it do
             expect(message.to_email[:att_0].class).to eql(File)
