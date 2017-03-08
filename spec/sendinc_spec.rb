@@ -178,7 +178,18 @@ describe Sendinc::Message  do
   end
 
   describe 'valid send' do
-    subject(:message) { Sendinc::Message.new(client, subject: 'lolwut', body: 'why, hello thar', to: 'foo@bar.com')}
+    subject(:message) do
+      mopts = opts.merge(extra_opts)
+      Sendinc::Message.new(client, mopts)
+    end
+    let(:opts) do
+      {
+        subject: 'lolwut',
+        body: 'why, hello thar',
+        to: 'foo@bar.com'
+      }
+    end
+    let(:extra_opts) { {} }
 
     before do
       stub_request(:post, "https://rest.sendinc.com/message.json").to_return(status: 200, body: '')
@@ -193,13 +204,49 @@ describe Sendinc::Message  do
     end
 
     describe '#to_email' do
-      it 'formats params correctly' do
-        expect(message.to_email).to eql({
-          subject: 'lolwut',
-          message: 'why, hello thar',
-          recipients: 'foo@bar.com',
-          email: client.email
-        })
+      context 'without attachments' do
+        it 'formats params correctly' do
+          expect(message.to_email).to eql({
+            subject: 'lolwut',
+            message: 'why, hello thar',
+            recipients: 'foo@bar.com',
+            email: client.email
+          })
+        end
+      end
+
+      let(:filepath) do
+        begin
+          f = Tempfile.new 'foo'
+          f.write 'hello there'
+          f.path
+        ensure
+          f.close
+        end
+      end
+
+      context 'with file path attachment' do
+        context 'file path exists' do
+          let(:extra_opts) { {attachments: [filepath]}}
+
+          it do
+            expect(message.to_email[:att_0].class).to eql(File)
+          end
+        end
+
+        context 'file path does not exist' do
+          let(:extra_opts) { { attachments: ['/this/dont/exist'] }}
+          it { expect { message.to_email }.to raise_error(Sendinc::MessageInvalidError)}
+        end
+      end
+
+      context 'with stringio attachment' do
+        let(:extra_opts) { { attachments: [StringIO.new('this is an attachment')] }}
+        it { expect(message.to_email[:att_0].class).to eql(File) }
+      end
+
+      context 'with file attachment' do
+        let(:extra_opts) { { attachments: [File.new(filepath)] } }
       end
     end
   end
