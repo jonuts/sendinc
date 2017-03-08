@@ -18,20 +18,30 @@ module Sendinc
       if file
         file
       elsif string
-        tmppath = [(filename || 'sendinc_attachment'), filetype].compact
-        tmpfile = Tempfile.new tmppath
-        begin
-          tmpfile.write string
-        ensure
-          tmpfile.close
-        end
-        File.new(tmpfile.path, 'rb')
+        generate_for_string
       elsif path
-        if File.exists? path
-          File.new(path, 'rb')
-        else
-          raise MessageInvalidError, 'file doesnt exist'
-        end
+        generate_for_path
+      end
+    end
+
+    private
+
+    def generate_for_string
+      tmppath = [(filename || 'sendinc_attachment'), filetype].compact
+      tmpfile = Tempfile.new tmppath
+      begin
+        tmpfile.write string
+      ensure
+        tmpfile.close
+      end
+      File.new(tmpfile.path, 'rb')
+    end
+
+    def generate_for_path
+      if File.exists? path
+        File.new(path, 'rb')
+      else
+        raise MessageInvalidError, 'file doesnt exist'
       end
     end
   end
