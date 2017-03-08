@@ -86,12 +86,12 @@ describe Sendinc::Message  do
       end
 
       it 'allows attachments to be sent in opts' do
-        expect(Sendinc::Message.new(client, attachments: ['foo', 'bar']).attachments).to eql(%w(foo bar))
+        expect(Sendinc::Message.new(client, attachments: ['foo', 'bar']).attachments.map(&:path)).to eql(%w(foo bar))
       end
 
       it 'allows attachments to be set in initializer block' do
         msg = Sendinc::Message.new(client) {|m| m.attach 'foo'}
-        expect(msg.attachments).to eql(%w(foo))
+        expect(msg.attachments.map(&:path)).to eql(%w(foo))
       end
     end
 
@@ -227,7 +227,7 @@ describe Sendinc::Message  do
 
       context 'with file path attachment' do
         context 'file path exists' do
-          let(:extra_opts) { {attachments: [filepath]}}
+          let(:extra_opts) { {attachments: [{path: filepath}]}}
 
           it do
             expect(message.to_email[:att_0].class).to eql(File)
@@ -235,18 +235,18 @@ describe Sendinc::Message  do
         end
 
         context 'file path does not exist' do
-          let(:extra_opts) { { attachments: ['/this/dont/exist'] }}
+          let(:extra_opts) { { attachments: [{path: '/this/dont/exist'}] }}
           it { expect { message.to_email }.to raise_error(Sendinc::MessageInvalidError)}
         end
       end
 
       context 'with stringio attachment' do
-        let(:extra_opts) { { attachments: [StringIO.new('this is an attachment')] }}
+        let(:extra_opts) { { attachments: [{string: 'this is an attachment'}] }}
         it { expect(message.to_email[:att_0].class).to eql(File) }
       end
 
       context 'with file attachment' do
-        let(:extra_opts) { { attachments: [File.new(filepath)] } }
+        let(:extra_opts) { { attachments: [{file: File.new(filepath)}] } }
       end
     end
   end

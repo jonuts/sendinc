@@ -26,8 +26,8 @@ module Sendinc
     attr_reader :client, :attachments, :error_list
 
     # path<string>:: Must be path to an existing file on the filesystem
-    def attach(path)
-      attachments << path
+    def attach(opts={})
+      attachments << Attachment.new(opts)
     end
 
     def valid?
@@ -56,20 +56,24 @@ module Sendinc
         opts[:cc] = cc if cc
         attachments.each.with_index {|attachment, idx|
           opt = :"att_#{idx}"
-          if attachment.respond_to?(:read)
-            file = Tempfile.new('sendinc_attachment')
+          if attachment.file
+            opts[opt] = attachment.file
+          elsif attachment.string
+            path = [(attachment.filename || 'sendinc_attachment'), attachment.filetype].compact
+            file = Tempfile.new path
             begin
-              file.write attachment.read
+              file.write attachment.string
             ensure
               file.close
             end
-            path = file.path
-          elsif File.exists?(attachment)
-            path = attachment
-          else
-            raise MessageInvalidError, 'file doesnt exist'
+            opts[opt] = File.new(file.path, 'rb')
+          elsif attachment.path
+            if File.exists? attachment.path
+              opts[opt] = File.new(attachment.path, 'rb')
+            else
+              raise MessageInvalidError, 'file doesnt exist'
+            end
           end
-          opts[opt] = File.new(path, 'rb')
         }
       }
     end
