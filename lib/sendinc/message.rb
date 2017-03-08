@@ -55,25 +55,7 @@ module Sendinc
       }.tap {|opts|
         opts[:cc] = cc if cc
         attachments.each.with_index {|attachment, idx|
-          opt = :"att_#{idx}"
-          if attachment.file
-            opts[opt] = attachment.file
-          elsif attachment.string
-            path = [(attachment.filename || 'sendinc_attachment'), attachment.filetype].compact
-            file = Tempfile.new path
-            begin
-              file.write attachment.string
-            ensure
-              file.close
-            end
-            opts[opt] = File.new(file.path, 'rb')
-          elsif attachment.path
-            if File.exists? attachment.path
-              opts[opt] = File.new(attachment.path, 'rb')
-            else
-              raise MessageInvalidError, 'file doesnt exist'
-            end
-          end
+          opts[:"att_#{idx}"] = attachment.generate
         }
       }
     end

@@ -13,6 +13,27 @@ module Sendinc
 
     end
     attr_reader :file, :string, :filename, :filetype, :path
+
+    def generate
+      if file
+        file
+      elsif string
+        tmppath = [(filename || 'sendinc_attachment'), filetype].compact
+        tmpfile = Tempfile.new tmppath
+        begin
+          tmpfile.write string
+        ensure
+          tmpfile.close
+        end
+        File.new(tmpfile.path, 'rb')
+      elsif path
+        if File.exists? path
+          File.new(path, 'rb')
+        else
+          raise MessageInvalidError, 'file doesnt exist'
+        end
+      end
+    end
   end
 end
 
