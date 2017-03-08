@@ -248,6 +248,11 @@ describe Sendinc::Message  do
       context 'with file attachment' do
         let(:extra_opts) { { attachments: [{file: File.new(filepath)}] } }
       end
+
+      context 'invalid attachment type' do
+        let(:extra_opts) { { attachments: [{foo: 'bar'}] } }
+        it { expect { message.to_email }.to raise_error(Sendinc::MessageInvalidError) }
+      end
     end
   end
 end

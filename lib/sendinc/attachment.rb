@@ -21,6 +21,8 @@ module Sendinc
         generate_for_string
       elsif path
         generate_for_path
+      else
+        raise MessageInvalidError, 'attachment not provided'
       end
     end
 
