@@ -22,7 +22,7 @@ module Sendinc
       yield self if block_given?
     end
 
-    attr_accessor :subject, :body, :to, :cc
+    attr_accessor :subject, :body, :to, :cc, :bcc
     attr_reader :client, :attachments, :error_list
 
     # path<string>:: Must be path to an existing file on the filesystem
@@ -53,7 +53,8 @@ module Sendinc
         email: client.email,
         recipients: to
       }.tap {|opts|
-        opts[:cc] = cc if cc
+        opts[:recipients_cc] = cc if cc
+        opts[:recipients_bcc] = bcc if bcc
         attachments.each.with_index {|attachment, idx|
           opts[:"att_#{idx}"] = attachment.generate
         }
