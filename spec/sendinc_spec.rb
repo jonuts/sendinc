@@ -204,6 +204,20 @@ describe Sendinc::Message  do
     end
 
     describe '#to_email' do
+      context 'with cc' do
+        let(:cc) { Faker::Internet.email }
+        let(:extra_opts) { {cc: cc }}
+        it 'adds :recipients_cc' do
+          expect(message.to_email).to include({recipients_cc: cc})
+        end
+      end
+      context 'with bcc' do
+        let(:bcc) { Faker::Internet.email }
+        let(:extra_opts) { {bcc: bcc }}
+        it 'adds :recipients_bcc' do
+          expect(message.to_email).to include({recipients_bcc: bcc})
+        end
+      end
       context 'without attachments' do
         it 'formats params correctly' do
           expect(message.to_email).to eql({

@@ -13,6 +13,7 @@ module Sendinc
 
       @to = opts.delete :to
       @cc = opts.delete :cc
+      @bcc = opts.delete :bcc
       @subject = opts.delete :subject
       @body = opts.delete :body
 
