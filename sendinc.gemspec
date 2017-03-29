@@ -35,4 +35,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "faker", "~> 1.6"
   spec.add_development_dependency "webmock", "~> 2.1"
   spec.add_development_dependency "pry", "~> 0.10"
+  spec.add_development_dependency "guard-rspec", "~> 4.7"
 end
