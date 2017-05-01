@@ -31,6 +31,7 @@ module Sendinc
     def generate_for_string
       tmppath = [(filename || 'sendinc_attachment'), filetype].compact
       tmpfile = Tempfile.new tmppath
+      tmpfile.binmode
       begin
         tmpfile.write string
       ensure
